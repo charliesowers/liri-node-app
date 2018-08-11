@@ -6,12 +6,14 @@ var Spotify = require('node-spotify-api');
 
 var request = require("request");
 
+var Twitter = require('twitter');
+
 var fs = require("fs");
 
 var command = process.argv[2];
 
 if(command === 'my-tweets'){
-
+    myTweets();
 }
 
 else if(command === 'spotify-this-song'){
@@ -38,7 +40,7 @@ else if(command === 'do-what-it-says'){
         var arg = dataArr[1].replace('"',"");
 
         if(command2 === 'my-tweets'){
-
+            myTweets();
         }
 
         else if(command2 === 'spotify-this-song'){
@@ -48,6 +50,19 @@ else if(command === 'do-what-it-says'){
 
         else if(command2 === 'movie-this'){
             movieThis(arg);
+        }
+    });
+}
+
+function myTweets(){
+    var client = new Twitter(keys.twitter);
+    var params = {screen_name: 'c_bootcamp'};
+    client.get('statuses/user_timeline', params, function(error, tweets, response) {
+        if (!error) {
+            for(var i = 0; i < Math.min(20,tweets.length); i++){
+                console.log("Text of Tweet: " + tweets[i].text);
+                console.log("Time of Tweet: " + tweets[i].created_at + "\n");
+            }
         }
     });
 }
